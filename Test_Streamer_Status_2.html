@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Streamer Status</title>
+</head>
+<body>
+    <div id="status">Loading...</div>
+	
+	
+    <script>
+        async function checkStreamerStatus() {
+            const clientId = '<Own_Client_ID>';
+            const accessToken = '<Twitch OAuth Token>';  // Du musst einen OAuth-Token erhalten
+
+            const streamerName = '<User Name des Twitch Streamers>';  // Ersetze dies durch den Namen des Streamers
+
+            const headers = {
+                'Client-ID': clientId,
+                'Authorization': `Bearer ${accessToken}`
+            };
+
+            try {
+                const response = await fetch(`https://api.twitch.tv/helix/streams?user_login=${streamerName}`, { headers });
+                const data = await response.json();
+                const stream = data.data[0];
+
+                const statusElement = document.getElementById('status');
+                if (stream) {
+                    statusElement.innerHTML = `<b>${streamerName}  <br>ist live!`;
+                    statusElement.style.textAlign='center';
+                } else {
+                    statusElement.innerHTML = `<b>${streamerName}  <br>ist offline!`;
+                    statusElement.style.textAlign='center';
+                }
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Streamer-Status:', error);
+                document.getElementById('status').textContent = 'Fehler beim Abrufen des Status.';
+            }
+        }
+
+        checkStreamerStatus();
+    </script>
+</body>
+</html>
